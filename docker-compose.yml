@@ -1,0 +1,26 @@
+services:
+  minecraft:
+    build: .
+    image: a2cloud/paper-minecraft:latest
+    container_name: minecraft
+    restart: unless-stopped
+    ports:
+      - "25565:25565/tcp"
+      - "25565:25565/udp"
+    environment:
+      - EULA=${EULA:-false}
+      - MEMORY=${MEMORY:-6G}
+      - SERVER_NAME=${SERVER_NAME:-A2Cloud Paper}
+      - VIEW_DISTANCE=${VIEW_DISTANCE:-8}
+    volumes:
+      - world-data:/data
+    stop_grace_period: 30s
+    healthcheck:
+      test: ["CMD-SHELL", "mc-status || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 90s
+
+volumes:
+  world-data:
